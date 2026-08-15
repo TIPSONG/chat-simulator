@@ -2,6 +2,10 @@
 
 一个纯前端的 Web UI 应用，用来制作像微信群聊 / QQ 群聊一样的对话截图或演示。
 
+![预览图](docs/preview.png)
+
+> **在线演示**：<https://tipsong.github.io/chat-simulator/>（由 GitHub Actions 自动部署）
+
 ## 功能
 
 ### 人物管理
@@ -78,6 +82,14 @@ npm run build
 # 本地预览构建产物
 npm run preview
 ```
+
+## 部署到 GitHub Pages
+
+推送到 `main` 后，`.github/workflows/deploy.yml` 会自动构建并部署到 Pages。
+
+首次使用需在仓库做一次设置：**Settings → Pages → Source 选 "GitHub Actions"**。
+
+部署成功后可访问：`https://tipsong.github.io/chat-simulator/`（`.github/workflows/ci.yml` 则负责每次 push/PR 的构建检查）。
 
 ## 使用
 
