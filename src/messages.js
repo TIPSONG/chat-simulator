@@ -2,7 +2,7 @@
 // 依赖 render.js 与 crop.js；与 render 形成循环依赖（见 render.js 顶部说明）。
 
 import { state, getChar, save } from './state.js';
-import { $, nowTime } from './utils.js';
+import { $, nowTime, uid } from './utils.js';
 import { renderChat, renderAll, renderPhoneHead, updateEditHint } from './render.js';
 import { askImageChoice } from './crop.js';
 
