@@ -16,7 +16,7 @@ if errorlevel 1 (
 )
 
 if not exist "node_modules" (
-    echo Installing dependencies (first run), please wait...
+    echo Installing dependencies, please wait...
     call npm install
     if errorlevel 1 (
         echo [ERROR] npm install failed. Check your network and retry.
