@@ -10,6 +10,7 @@ import {
 } from './messages.js';
 import { openCropModal, askImageChoice, closeCrop, closeImageChoice } from './crop.js';
 import { copyText, exportJson, importJson, exportImage } from './export.js';
+<<<<<<< HEAD
 import { enterPlayMode } from './player.js';
 import { loadDemo } from './data.js';
 import { commitBubbleCss, resetBubbleCss } from './bubbleStyle.js';
@@ -40,6 +41,11 @@ function showToast(msg, type) {
   setTimeout(() => { el.style.opacity = '0'; }, 2500);
 }
 
+=======
+import { loadDemo } from './data.js';
+import { commitBubbleCss, resetBubbleCss } from './bubbleStyle.js';
+
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 export function bindEvents() {
   // topbar
   $('titleInput').addEventListener('input', function () {
@@ -64,8 +70,12 @@ export function bindEvents() {
   });
   $('bubbleCssApplyBtn').addEventListener('click', commitBubbleCss);
   $('bubbleCssResetBtn').addEventListener('click', resetBubbleCss);
+<<<<<<< HEAD
   // window resize 节流
   window.addEventListener('resize', throttle(fitPhoneHeight, 150));
+=======
+  window.addEventListener('resize', fitPhoneHeight);
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
   $('copyTextBtn').addEventListener('click', copyText);
   $('exportJsonBtn').addEventListener('click', exportJson);
   $('exportImageBtn').addEventListener('click', exportImage);
@@ -78,16 +88,23 @@ export function bindEvents() {
     if (state.messages.length && !confirm('载入示例将覆盖当前数据，确定吗？')) return;
     loadDemo();
   });
+<<<<<<< HEAD
   $('playModeBtn').addEventListener('click', enterPlayMode);
+=======
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
   $('clearBtn').addEventListener('click', function () {
     if (!state.messages.length) return;
     if (confirm('确定清空全部消息吗？（人物保留）')) { state.messages = []; renderChat(); save(); }
   });
 
   // character form
+<<<<<<< HEAD
   $('addCharBtn').addEventListener('click', function () {
     addOrUpdateCharacter().catch(e => console.error(e));
   });
+=======
+  $('addCharBtn').addEventListener('click', addOrUpdateCharacter);
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
   $('cancelCharEditBtn').addEventListener('click', resetCharForm);
   $('charName').addEventListener('input', function () {
     if (!hasCharAvatar()) {
@@ -113,11 +130,17 @@ export function bindEvents() {
     const b = e.target.closest('.tp');
     if (b) setComposerType(b.getAttribute('data-type'));
   });
+<<<<<<< HEAD
   $('addMsgBtn').addEventListener('click', function () {
     addMessage().catch(e => console.error(e));
   });
   $('msgText').addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); addMessage().catch(err => console.error(err)); }
+=======
+  $('addMsgBtn').addEventListener('click', addMessage);
+  $('msgText').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); addMessage(); }
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
   });
   $('msgImageBtn').addEventListener('click', function () { $('msgImageFile').click(); });
   $('msgImageFile').addEventListener('change', function () {
@@ -135,9 +158,13 @@ export function bindEvents() {
     const b = e.target.closest('.tp');
     if (b) { setEditType(b.getAttribute('data-type')); renderEditImagePreview(); }
   });
+<<<<<<< HEAD
   $('editSaveBtn').addEventListener('click', function () {
     saveEdit().catch(e => console.error(e));
   });
+=======
+  $('editSaveBtn').addEventListener('click', saveEdit);
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
   $('editCancelBtn').addEventListener('click', closeEdit);
   $('editOverlay').addEventListener('click', function (e) { if (e.target === this) closeEdit(); });
   $('editImageBtn').addEventListener('click', function () { $('editImageFile').click(); });

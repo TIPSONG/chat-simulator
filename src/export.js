@@ -1,5 +1,6 @@
 // 导入 / 导出 / 复制文本 / 导出图片。
 
+<<<<<<< HEAD
 import { state, getChar, save, prepareImportedState, resolveStateForExport } from './state.js';
 import { $, download } from './utils.js';
 import { applyMetaFromState, renderAll } from './render.js';
@@ -14,11 +15,27 @@ export async function exportJson() {
 export async function importJson(file) {
   const r = new FileReader();
   r.onload = async function () {
+=======
+import { state, getChar, save } from './state.js';
+import { $, download } from './utils.js';
+import { applyMetaFromState, renderAll } from './render.js';
+
+// 导出项目 JSON。
+export function exportJson() {
+  download('对话模拟器-' + (state.meta.title || '项目') + '.json', JSON.stringify(state, null, 2), 'application/json');
+}
+
+// 导入项目 JSON。
+export function importJson(file) {
+  const r = new FileReader();
+  r.onload = function () {
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
     try {
       const data = JSON.parse(r.result);
       if (!data || !Array.isArray(data.messages) || !Array.isArray(data.characters)) {
         alert('文件格式不正确：缺少 characters / messages 字段'); return;
       }
+<<<<<<< HEAD
 
       // schema 基础校验
       const charErrors = validateCharacters(data.characters);
@@ -38,6 +55,8 @@ export async function importJson(file) {
       // 把导入的 Data URL 图片迁移到 IndexedDB
       await prepareImportedState(data);
 
+=======
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
       state.characters = data.characters;
       state.messages = data.messages;
       if (data.meta) {
@@ -52,8 +71,12 @@ export async function importJson(file) {
       }
       applyMetaFromState();
       renderAll();
+<<<<<<< HEAD
       await save();
       showToast('导入成功', 'success');
+=======
+      save();
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
     } catch (e) {
       alert('导入失败：' + e.message);
     }
@@ -61,6 +84,7 @@ export async function importJson(file) {
   r.readAsText(file);
 }
 
+<<<<<<< HEAD
 function validateCharacters(arr) {
   const errs = [];
   if (!Array.isArray(arr)) { errs.push('characters 不是数组'); return errs; }
@@ -133,6 +157,8 @@ function sanitizeData(data) {
   if (data.meta && typeof data.meta !== 'object') data.meta = {};
 }
 
+=======
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 // 导出聊天为图片（html2canvas，CDN 加载）。
 export function exportImage() {
   if (typeof window.html2canvas !== 'function') {
@@ -191,7 +217,11 @@ export function copyText() {
   const text = lines.join('\n');
   if (!text) { alert('当前没有可复制的对话'); return; }
   if (navigator.clipboard && navigator.clipboard.writeText) {
+<<<<<<< HEAD
     navigator.clipboard.writeText(text).then(function () { showToast('已复制到剪贴板', 'success'); })
+=======
+    navigator.clipboard.writeText(text).then(function () { alert('已复制到剪贴板'); })
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
       .catch(function () { fallbackCopy(text); });
   } else {
     fallbackCopy(text);
@@ -203,6 +233,7 @@ export function fallbackCopy(text) {
   ta.value = text;
   document.body.appendChild(ta);
   ta.select();
+<<<<<<< HEAD
   try { document.execCommand('copy'); showToast('已复制到剪贴板', 'success'); }
   catch (e) { alert('复制失败，请手动复制：\n\n' + text); }
   document.body.removeChild(ta);
@@ -223,3 +254,9 @@ function showToast(msg, type) {
   el.style.opacity = '1';
   setTimeout(() => { el.style.opacity = '0'; }, 2500);
 }
+=======
+  try { document.execCommand('copy'); alert('已复制到剪贴板'); }
+  catch (e) { alert('复制失败，请手动复制：\n\n' + text); }
+  document.body.removeChild(ta);
+}
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a

@@ -5,7 +5,11 @@
 // render（如 renderAll / renderChat）。ES 模块的 live binding 能正确处理这种
 // 仅在函数体内发生的相互调用（顶层不求值对方导出），故可正常工作。
 
+<<<<<<< HEAD
 import { state, getChar, BGS } from './state.js';
+=======
+import { state, getChar, save, BGS } from './state.js';
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 import { $, buildAvatarEl } from './utils.js';
 import { DEFAULT_BUBBLE_CSS, applyBubbleCss } from './bubbleStyle.js';
 import { startEditCharacter, deleteCharacter } from './characters.js';
@@ -158,6 +162,7 @@ export function updateEditHint() {
 export function setMainCharacter(id) {
   state.characters.forEach(function (c) { c.isMain = (c.id === id); });
   renderAll();
+<<<<<<< HEAD
 }
 
 // ---- 聊天记录区：增量渲染优化 ----
@@ -272,6 +277,26 @@ function syncMessageContent(el, m) {
   }
 }
 
+=======
+  save();
+}
+
+// 聊天记录区。
+export function renderChat() {
+  const area = $('chatArea');
+  area.innerHTML = '';
+  if (state.messages.length === 0) {
+    area.innerHTML = '<div class="empty">聊天记录为空，先在左侧添加内容吧～</div>';
+  } else {
+    state.messages.forEach(function (m, idx) {
+      area.appendChild(buildMessageEl(m, idx));
+    });
+  }
+  area.scrollTop = area.scrollHeight;
+  fitPhoneHeight();
+}
+
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 // 一条消息（含悬浮工具条）。
 export function buildMessageEl(m, idx) {
   let el;
@@ -390,6 +415,10 @@ export function attachImageResize(handle, img, m) {
     if (!active) return;
     active = false;
     m.imageW = Math.round(curW);
+<<<<<<< HEAD
+=======
+    save();
+>>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
   }
   handle.addEventListener('pointerup', endResize);
   handle.addEventListener('pointercancel', endResize);
