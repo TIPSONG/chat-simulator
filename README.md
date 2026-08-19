@@ -42,7 +42,8 @@
 chat-simulator/
 ├── index.html            # 页面入口（HTML 结构）
 ├── package.json
-├── vite.config.js
+├── vite.config.js        # 标准多文件构建（dist/，用于 GitHub Pages）
+├── vite.singlefile.config.js # 单文件离线构建（dist-single/，用于分享）
 ├── LICENSE
 ├── legacy/
 │   └── chat-simulator.singlefile.html   # 旧版单文件（备份，仅作参考）
@@ -76,8 +77,11 @@ npm install
 # 启动开发服务器（热更新）
 npm run dev
 
-# 构建生产版本（输出到 dist/）
+# 构建生产版本（输出到 dist/，用于部署）
 npm run build
+
+# 构建离线单文件版（输出到 dist-single/index.html，双击即用）
+npm run build:single
 
 # 本地预览构建产物
 npm run preview
@@ -95,11 +99,24 @@ npm run preview
 
 - **开发**：`npm run dev`，浏览器打开 Vite 提示的地址（默认 `http://localhost:5173`）。
 - **生产**：`npm run build` 后，把 `dist/` 目录部署到任意静态服务器（或直接 `npm run preview` 本地预览）。
+- **离线单文件（分享用）**：`npm run build:single` 生成 `dist-single/index.html`，JS/CSS 全部内联、已压缩混淆、**完全离线、不暴露源码**，可直接双击打开或发给他人。
 - 旧版单文件（可直接双击打开）见 `legacy/chat-simulator.singlefile.html`，仅作备份，不随源码维护。
+
+## 分享打包（离线单文件）
+
+适合把成品直接发给他人、或放到任意环境双击打开：无需服务器、无需联网、不暴露源码。
+
+```bash
+npm run build:single
+```
+
+- 产物为 `dist-single/index.html`（约 270 KB），JS/CSS 全部内联并压缩混淆，html2canvas 也已打包在内，**完全离线可用**。
+- 复制该文件即可分享；也可将其压缩为 zip（如 `chat-simulator-share.zip`）便于通过聊天软件发送。
+- `dist-single/` 与分享 zip 已被 `.gitignore` 忽略，**不进入仓库**，需要时用上面的命令重新生成。
 
 ## 依赖说明
 
-- 唯一运行时依赖 **html2canvas**（导出图片用）通过 CDN 加载，需联网；其余功能离线可用。
+- **html2canvas**（导出图片用）已作为本地依赖随构建打包，导出图片**完全离线可用**，无需联网。
 - 图片与头像均以 Data URL 内嵌在项目 JSON 中，导出/导入不会丢失。
 
 ## 快捷键
