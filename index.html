@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>对话模拟器 · 群聊生成工具</title>
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span>对话模拟器</div>
+    <input type="text" id="titleInput" placeholder="聊天标题" maxlength="40">
+    <div class="spacer"></div>
+    <button class="btn" id="playModeBtn" title="进入演示播放模式">▶ 播放演示</button>
+    <button class="btn" id="copyTextBtn" title="复制全部对话为纯文本">复制文本</button>
+    <button class="btn" id="exportJsonBtn" title="导出为 JSON 文件">导出项目</button>
+    <button class="btn" id="exportImageBtn" title="导出聊天为图片">导出图片</button>
+    <button class="btn" id="importJsonBtn" title="导入 JSON 文件">导入</button>
+    <input type="file" id="importJsonInput" accept=".json,application/json" class="hidden">
+    <button class="btn" id="loadDemoBtn" title="载入示例数据">示例</button>
+    <button class="btn danger" id="clearBtn" title="清空全部消息">清空消息</button>
+  </div>
+
+  <div class="main">
+    <!-- Sidebar: editor -->
+    <div class="sidebar">
+      <!-- Characters -->
+      <div>
+        <div class="section-title">👥 人物管理</div>
+        <div class="card">
+          <div class="avatar-preview-wrap field">
+            <div class="avatar circle" id="charAvatarPreview">?</div>
+            <div style="flex:1">
+              <div class="field" style="margin-bottom:6px">
+                <input type="text" id="charName" placeholder="昵称" maxlength="20">
+              </div>
+              <div class="row">
+                <button class="btn small" id="charAvatarBtn">上传头像</button>
+                <button class="btn small" id="charAvatarClearBtn">移除头像</button>
+                <input type="color" id="charColor" value="#4c7cff" title="头像背景色" style="width:32px;height:26px;border:none;background:none;padding:0;">
+              </div>
+            </div>
+          </div>
+          <input type="file" id="charAvatarFile" accept="image/*" class="hidden">
+          <div class="row" style="margin-top:4px">
+            <button class="btn primary" id="addCharBtn">＋ 添加人物</button>
+            <button class="btn" id="cancelCharEditBtn" style="display:none">取消</button>
+          </div>
+          <div class="hint" style="margin-top:8px">可自定义头像、昵称与头像底色；不传头像时显示首字。</div>
+        </div>
+        <div class="char-list" id="charList" style="margin-top:10px"></div>
+      </div>
+
+      <!-- Composer -->
+      <div>
+        <div class="section-title">💬 添加内容</div>
+        <div class="card">
+          <div class="type-switch" id="typeSwitch">
+            <button class="tp active" data-type="message">对话</button>
+            <button class="tp" data-type="narration">旁白</button>
+            <button class="tp" data-type="special">特殊事件</button>
+            <button class="tp" data-type="event">居中事件</button>
+          </div>
+
+          <div class="field" id="msgCharField" style="margin-top:10px">
+            <label>选择说话人物</label>
+            <select id="msgCharSelect"></select>
+            <div class="hint" id="msgMainHint" style="margin-top:6px"></div>
+          </div>
+
+          <div class="field">
+            <label id="msgTextLabel">对话内容</label>
+            <textarea id="msgText" placeholder="输入内容…"></textarea>
+          </div>
+
+          <div class="field" id="msgImageField">
+            <label>图片（可选）</label>
+            <div id="msgImagePreview" class="hidden img-preview-box"></div>
+            <div class="row" style="margin-top:6px">
+              <button class="btn small" id="msgImageBtn">添加图片</button>
+              <button class="btn small" id="msgImageRemoveBtn" style="display:none">移除图片</button>
+            </div>
+          </div>
+          <input type="file" id="msgImageFile" accept="image/*" class="hidden">
+
+          <button class="btn primary" id="addMsgBtn" style="width:100%;padding:10px">＋ 添加到聊天</button>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div>
+        <div class="section-title">🎨 外观</div>
+        <div class="card">
+          <div class="field">
+            <label>聊天背景</label>
+            <select id="bgSelect"></select>
+          </div>
+          <div class="field">
+            <label class="row" style="cursor:pointer">
+              <input type="checkbox" id="autoHeightCheck" checked> 自适应对话高度
+            </label>
+          </div>
+          <div class="field">
+            <label class="row" style="cursor:pointer">
+              <input type="checkbox" id="showTimeCheck" checked> 显示时间
+            </label>
+          </div>
+          <div class="field">
+            <label class="row" style="cursor:pointer">
+              <input type="checkbox" id="showInputBarCheck" checked> 显示输入框
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bubble style (secondary menu) -->
+      <div>
+        <div class="section-title">🎈 气泡样式</div>
+        <div class="card">
+          <details>
+            <summary>自定义气泡 CSS（点击展开）</summary>
+            <div class="field" style="margin-top:10px">
+              <textarea id="bubbleCssInput" spellcheck="false" style="width:100%;min-height:280px;font-family:Consolas,Monaco,'Courier New',monospace;font-size:12px;line-height:1.5;white-space:pre;resize:vertical"></textarea>
+            </div>
+            <div class="row">
+              <button class="btn primary small" id="bubbleCssApplyBtn">应用样式</button>
+              <button class="btn small" id="bubbleCssResetBtn">恢复默认</button>
+            </div>
+            <div class="hint" style="margin-top:6px">修改后点击「应用样式」，聊天与下方预览会同时更新。</div>
+            <div class="bubble-preview">
+              <div class="bp-title">气泡预览</div>
+              <div class="msg-row" style="margin-bottom:10px">
+                <div class="avatar circle" style="width:26px;height:26px;font-size:11px;background:#f06292">A</div>
+                <div class="msg-body">
+                  <div class="msg-name">角色A</div>
+                  <div class="bubble"><div class="msg-text">这是对方发来的一条消息</div></div>
+                </div>
+              </div>
+              <div class="msg-row right">
+                <div class="avatar circle" style="width:26px;height:26px;font-size:11px;background:#5c6bc0">我</div>
+                <div class="msg-body">
+                  <div class="bubble"><div class="msg-text">这是我发的一条消息</div></div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview">
+      <div class="phone">
+        <div class="phone-head">
+          <div id="phoneTitle">群聊</div>
+          <div class="sub" id="phoneSub"></div>
+        </div>
+        <div class="phone-body" id="chatArea"></div>
+        <div class="phone-inputbar" id="phoneInputBar">
+          <div class="pi-btn" title="语音输入">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+              <path d="M5 10v1a7 7 0 0 0 14 0v-1"></path>
+              <line x1="12" y1="18" x2="12" y2="22"></line>
+            </svg>
+          </div>
+          <div class="pi-field">请输入消息…</div>
+          <div class="pi-btn pi-plus" title="添加">＋</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="overlay hidden" id="editOverlay">
+  <div class="modal">
+    <h3>编辑内容</h3>
+    <div class="type-switch" id="editTypeSwitch">
+      <button class="tp" data-type="message">对话</button>
+      <button class="tp" data-type="narration">旁白</button>
+      <button class="tp" data-type="special">特殊事件</button>
+      <button class="tp" data-type="event">居中事件</button>
+    </div>
+    <div class="field" id="editCharField" style="margin-top:12px">
+      <label>说话人物</label>
+      <select id="editCharSelect"></select>
+      <div class="hint" id="editMainHint" style="margin-top:6px"></div>
+    </div>
+    <div class="field">
+      <label id="editTextLabel">内容</label>
+      <textarea id="editText" style="min-height:90px"></textarea>
+    </div>
+    <div class="field" id="editImageField">
+      <label>图片</label>
+      <div id="editImagePreview" class="hidden img-preview-box"></div>
+      <div class="row" style="margin-top:6px">
+        <button class="btn small" id="editImageBtn">更换图片</button>
+        <button class="btn small" id="editImageRemoveBtn">移除图片</button>
+      </div>
+    </div>
+    <div class="field" id="editTimeField">
+      <label>时间</label>
+      <input type="text" id="editTimeInput" placeholder="例如：09:30，留空则不显示">
+    </div>
+    <input type="file" id="editImageFile" accept="image/*" class="hidden">
+    <div class="row" style="justify-content:flex-end;margin-top:6px">
+      <button class="btn" id="editCancelBtn">取消</button>
+      <button class="btn primary" id="editSaveBtn">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Avatar crop modal -->
+<div class="overlay hidden" id="cropOverlay">
+  <div class="modal crop-modal">
+    <h3 id="cropTitle">裁剪头像</h3>
+    <div class="crop-stage" id="cropStage">
+      <img id="cropImg" alt="" draggable="false">
+      <div class="crop-mask" id="cropMask"></div>
+      <div class="crop-ring" id="cropRing"></div>
+    </div>
+    <div class="crop-controls">
+      <button class="btn small" id="cropZoomOutBtn" title="缩小">−</button>
+      <input type="range" id="cropZoomRange" min="1" max="4" step="0.01" value="1">
+      <button class="btn small" id="cropZoomInBtn" title="放大">＋</button>
+    </div>
+    <div class="hint" id="cropHint" style="margin-top:8px">拖动图片调整位置，滚轮或滑块缩放。圆形内区域将作为头像显示。</div>
+    <div class="row" style="justify-content:flex-end;margin-top:10px">
+      <button class="btn" id="cropCancelBtn">取消</button>
+      <button class="btn primary" id="cropConfirmBtn">确定裁剪</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image choice modal -->
+<div class="overlay hidden" id="imgChoiceOverlay">
+  <div class="modal">
+    <h3>图片处理</h3>
+    <img id="imgChoicePreview" class="img-choice-preview" alt="">
+    <div class="hint" style="margin:10px 0 6px;text-align:center">是否裁剪这张图片？</div>
+    <div class="row" style="justify-content:center;flex-wrap:wrap">
+      <button class="btn" id="imgChoiceOriginalBtn">使用原图</button>
+      <button class="btn" id="imgChoiceSquareBtn">正方形裁剪</button>
+      <button class="btn" id="imgChoiceRectBtn">长方形裁剪</button>
+    </div>
+    <div class="row" style="justify-content:flex-end;margin-top:10px">
+      <button class="btn" id="imgChoiceCancelBtn">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox hidden" id="lightbox"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
