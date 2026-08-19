@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // 应用状态与持久化。state 是可变对象，被所有模块共享。
 // 图片（Data URL）不再直接存于 localStorage，而是放在 IndexedDB，state 中只保留引用 ID。
 // 运行时 state.characters[i].avatar 与 state.messages[i].image 仍为 Data URL（内存缓存），
@@ -9,22 +8,11 @@ import { compressImage, formatBytes } from './imageUtils.js';
 
 export const STORAGE_KEY = 'chatSimulator.v2'; // v2 = 图片引用模式
 
-=======
-// 应用状态与常量。state 是可变对象，被所有模块共享。
-// 持久化到 localStorage 的键名。
-export const STORAGE_KEY = 'chatSimulator.v1';
-
-// 头像兜底颜色（未上传头像时按序/手动选择）。
->>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 export const AVATAR_COLORS = [
   '#f06292', '#7986cb', '#4db6ac', '#ffb74d', '#a1887f', '#64b5f6',
   '#ba68c8', '#81c784', '#e57373', '#4dd0e1', '#ff8a65', '#5c6bc0'
 ];
 
-<<<<<<< HEAD
-=======
-// 聊天背景预设。
->>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 export const BGS = {
   'light': { label: '浅灰（默认）', css: '#edeef2' },
   'warm':  { label: '暖米色', css: '#f6efe4' },
@@ -36,32 +24,18 @@ export const BGS = {
   'grad3': { label: '渐变·夜空', css: 'linear-gradient(160deg,#0f2027,#2c5364)' }
 };
 
-<<<<<<< HEAD
-=======
-// 全局应用状态。
->>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 export const state = {
   meta: { title: '我们的群聊', showTime: true, bg: 'light', autoHeight: true, bubbleCss: '', showInputBar: true },
   characters: [],
   messages: []
 };
 
-<<<<<<< HEAD
-=======
-// 把当前状态写入 localStorage（失败静默，例如隐私模式）。
-export function save() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
-}
-
-// 按 id 查找人物。
->>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a
 export function getChar(id) {
   for (let i = 0; i < state.characters.length; i++) {
     if (state.characters[i].id === id) return state.characters[i];
   }
   return null;
 }
-<<<<<<< HEAD
 
 // ---- 图片引用管理 ----
 
@@ -308,5 +282,3 @@ export async function prepareImportedState(data) {
   }
   return data;
 }
-=======
->>>>>>> 579922c52149b11724dcde3ac43fd3db5ed16b6a

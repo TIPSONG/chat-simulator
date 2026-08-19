@@ -3,6 +3,10 @@ node_modules/
 
 # 构建产物
 dist/
+dist-single/
+
+# 分享包（生成物，本地保留即可）
+chat-simulator-share.zip
 
 # 编辑器 / 系统
 .vscode/
